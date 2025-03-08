@@ -3,13 +3,18 @@ import Header from './Header'
 import {useState} from "react"
 import { checkValidData } from '../utils/validate'
 import {auth} from "../utils/firebase"
-import { createUserWithEmailAndPassword , signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword , signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useNavigate } from 'react-router'
+import { addUser } from '../utils/userSlice'
+import { useDispatch } from 'react-redux'
 
 const Login = () => {
   const [errorMessage,SetErrorMessage]=useState(null)
+  const name=useRef(null)
   const email=useRef(null)
   const password=useRef(null)
-
+  const navigate=useNavigate()
+const dispatch=useDispatch()
   const [isSignInForm,setIsSignInForm]=useState(true)
   const toggleSignInForm=()=>{
 setIsSignInForm(!isSignInForm)
@@ -24,7 +29,25 @@ setIsSignInForm(!isSignInForm)
   .then((userCredential) => {
    
     const user = userCredential.user;
-  console.log(user);
+    updateProfile(user, {
+      displayName: name.current.value,
+      photoURL: "https://lh3.googleusercontent.com/a/ACg8ocIXQPwyJTMnTNPNM17V85a6XGpchlO1QxAUI7vNxbQtaUXQ7fUg=s288-c-no",
+    })
+      .then(() => {
+        const { uid, email, displayName, photoURL } = auth.currentUser;
+               dispatch(
+                 addUser({
+                   uid: uid,
+                   email: email,
+                   displayName: displayName,
+                   photoURL: photoURL,
+                 })
+               );
+        navigate("/browse");
+      })
+      .catch((error) => {
+        SetErrorMessage(error.message);
+      });
   
   })
   .catch((error) => {
@@ -39,6 +62,7 @@ setIsSignInForm(!isSignInForm)
   
     const user = userCredential.user;
   console.log(user);
+  navigate("/browse");
   
   })
   .catch((error) => {
@@ -59,7 +83,7 @@ setIsSignInForm(!isSignInForm)
       <h1 className="font-bold text-3xl py-4">
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
-      {!isSignInForm && <input type="text" placeholder="Full Name"  className="p-3 my-4 w-full bg-gray-700"/>}
+      {!isSignInForm && <input ref={name} type="text" placeholder="Full Name"  className="p-3 my-4 w-full bg-gray-700"/>}
           <input ref={email} type="text" placeholder="email"  className="p-3 my-4 w-full bg-gray-700"/>
           <input ref={password} type="password" placeholder="password" className="p-3 my-4 w-full bg-gray-700" />
           <p className='py-1 text-lg font-bold text-red-600'>{errorMessage}</p>
