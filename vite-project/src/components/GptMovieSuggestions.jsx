@@ -6,7 +6,7 @@ const GptMovieSuggestions = () => {
     if (!movieNames) return null;
   
     return (
-      <div className="p-4  text-white opacity-85">
+      <div className="p-4  text-white opacity-90">
         <div>
         <GptMovieList
               key={movieNames}
