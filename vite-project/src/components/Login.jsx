@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword , signInWithEmailAndPassword, updateProf
 
 import { addUser } from '../utils/userSlice'
 import { useDispatch } from 'react-redux'
-import { USER_AVATAR } from '../utils/constants'
+import { BG, USER_AVATAR } from '../utils/constants'
 
 const Login = () => {
   const [errorMessage,SetErrorMessage]=useState(null)
@@ -74,7 +74,7 @@ setIsSignInForm(!isSignInForm)
     <div>
       <Header/>
     <div className="absolute">
-    <img src="https://assets.nflxext.com/ffe/siteui/vlv3/42a0bce6-fc59-4c1c-b335-7196a59ae9ab/web/IN-en-20250303-TRIFECTA-perspective_d5f81427-d6cf-412d-8e86-2315671b9be1_large.jpg" alt="bg"/>
+    <img src={BG} alt="bg"/>
     </div>
       <form onSubmit={(e)=>e.preventDefault()} className="w-3/12 absolute p-10 bg-black my-28 mx-auto right-0 left-0 text-white rounded-lg opacity-75">
       <h1 className="font-bold text-3xl py-4">
